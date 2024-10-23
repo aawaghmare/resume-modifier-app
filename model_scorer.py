@@ -1,4 +1,4 @@
-
+import re
 from sentence_transformers import SentenceTransformer, util
 # Load a pre-trained sentence transformer model that supports encoding
 model_scorer = SentenceTransformer ('all-mpnet-base-v2')
