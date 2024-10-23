@@ -1,5 +1,5 @@
 # Replace this with your actual Gemini API key
-API_KEY = "AIzaSyDGmQpZ-1u4pIqErhLjQ9P0zIG3f8g6Lzk"
+API_KEY = ""
 
 import google.generativeai as genai
 import os
