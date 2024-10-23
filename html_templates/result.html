@@ -1,0 +1,216 @@
+<!doctype html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>AI Based Resume Modifier</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        text-align: center; 
+                        margin-top: 50px; 
+                    }
+                    .top-section { 
+                        background-color: purple; 
+                        color: white; 
+                        padding: 20px; 
+                        position: relative; 
+                    }
+                    h1 { 
+                        margin: 0; 
+                    }
+                    .retry-form input[type="submit"] {
+                        font-size: 16px;
+                        padding: 10px 20px;
+                        background-color: #4CAF50;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        position: absolute; 
+                        top: 20px; 
+                        right: 20px;
+                    }
+                    .retry-form input[type="submit"]:hover {
+                        background-color: #45a049;
+                    }
+                    .results-container {
+                        display: flex;
+                        justify-content: space-between;
+                        margin: 20px;
+                    }
+                    .results {
+                        text-align: left; /* Align text to the left */
+                        width: 45%;
+                        padding: 20px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        line-height: 1.6;
+                    }
+                    .results h2 {
+                        margin-bottom: 10px;
+                    }
+                    .disclaimer {
+                        margin-top: 20px;
+                        font-style: italic;
+                        color: #ff0000;
+                    }
+                    /* Container for text and score circle */
+                    .analysis-container {
+                        display: flex;
+                        justify-content: space-between; /* Align text on left, circle on right */
+                        align-items: center; /* Vertically center both items */
+                        margin: 20px 0;
+                        padding: 10px;
+                    }
+                                        
+                    .resume-analysis-text {
+                        font-size: 14px;  /* Adjust font size as needed */
+                        color: #333;  /* Neutral color for the text */
+                        text-align: left;  /* Align text to the left */
+                        margin-bottom: 10px;  /* Space between text and circle */
+                    }
+                    .modified-score-circle {
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        background-color: purple;
+                        color: white;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        margin: 0 auto;
+                        position: relative;
+                    }
+                    .circle {
+                        width: 100px;
+                        height: 100px;
+                        margin: 0 auto;
+                        align-items: right;
+                    }
+                    /* Style the score circle container */
+                    #modified-score-circle {
+                        width: 120px;  /* Set a fixed width for the circle */
+                        height: 120px;  /* Set a fixed height for the circle */
+                        margin-left: 20px;  /* Add space between the text and circle */
+                    }
+
+                    /* Styles for the right column */
+                    .right-column {
+                        width: 45%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 20px; /* Space between sections */
+                    }
+                    .stacked-results {
+                        padding: 20px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        text-align: left; /* Align text to the left */
+                    }
+                    /* Mobile-specific styles */
+                    @media (max-width: 768px) {
+                        .results-container {
+                            flex-direction: column;
+                            align-items: center;
+                        }
+                        .results {
+                            width: 90%;
+                            margin-bottom: 20px;
+                        }
+                    }                    
+                </style>
+                <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+            </head>
+            <body>
+                <div class="top-section">
+                    <h1>AI Based Resume Modifier</h1>
+                    <form class="retry-form" method="POST">
+                        <input type="hidden" name="resume_path" value="{{ resume_path }}">
+                        <input type="hidden" name="job_desc_path" value="{{ job_desc_path }}">
+                        <input type="hidden" name="retry" value="1">
+                        <input type="submit" value="Retry">
+                    </form>
+                </div>
+            
+                <div class="disclaimer">
+                    <p>Disclaimer: Please review your processed resume as it has been modified by AI. Manual intervention may be needed to ensure accuracy and appropriateness.</p>
+                </div>
+            
+                <div class="results-container">
+                    <!-- Modified Resume Section -->
+                    <div class="results">
+                            <!-- Resume Analysis Text and Score Circle Side by Side -->
+                        <div class="analysis-container">
+                            <!-- Left side: Resume Analysis Text -->
+                            <div class="resume-analysis-text">
+                                <strong>Resume Analysis:</strong> This score is calculated based on the similarity between the job description and modified resume. Check out the Recruiter feedback to further improve your resume.
+                            </div>
+                            
+                            <!-- Right side: Score Circle -->
+                            <div id="modified-score-circle" class="circle"></div>
+                        </div>
+
+                        <h2 style="color: purple;">Modified Resume</h2>
+                        <div>{{ resume_content | safe }}</div>
+                    </div>
+            
+                    <!-- Right Column with Stacked Results -->
+                    <div class="right-column">
+                        <!-- Generated Cover Letter Section -->
+                        <div class="stacked-results">
+                            <h2 style="color: purple;">Sample Cover Letter</h2>
+                            <div>{{ cover_letter_content | safe }}</div>
+                        </div>
+                        <!-- Generated Recruiter Feedback Section -->
+                        <div class="stacked-results">
+                            <h2 style="color: purple;">Recruiter Feedback</h2>
+                            <div>{{ recruiter_feedback_content | safe }}</div>
+                        </div>
+            
+                        <!-- Generated Career Coach Advice Section -->
+                        <div class="stacked-results">
+                            <h2 style="color: purple;">Career Coach Advice</h2>
+                            <div>{{ career_coach_advice_content | safe }}</div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script>
+                    // Create dynamic circular score for modified resume
+                    var modifiedCircle = new ProgressBar.Circle('#modified-score-circle', {
+                        color: '#FCB03C',
+                        trailColor: '#eee',
+                        trailWidth: 4,
+                        duration: 1400,
+                        easing: 'easeInOut',
+                        strokeWidth: 6,
+                        from: { color: '#FFEA82', a: 0 },
+                        to: { color: '#1E90FF', a: 1 },
+                        text: {
+                            value: 'Score: 0%',  // Initial text inside the circle
+                            style: {
+                                color: '#1E90FF',  // Dodger Blue text color
+                                position: 'absolute',
+                                left: '50%',
+                                top: '50%',
+                                padding: 0,
+                                margin: 0,
+                                fontSize: '16px',  // Adjust font size as needed
+                                // Center the text
+                                transform: 'translate(-50%, -50%)'
+                            }
+                        },
+                        step: function(state, circle) {
+                            circle.path.setAttribute('stroke', state.color);
+                            var value = Math.round(circle.value() * 100);
+                            circle.setText(`Score: ${value}%`);
+                            circle.text.style.color = '#1E90FF';  // Dodger Blue text color
+                        }
+                    });
+                    modifiedCircle.animate({{ modified_resume_score }} / 100);  // Dynamic score from backend
+                </script>
+            </body>
+            </html>
