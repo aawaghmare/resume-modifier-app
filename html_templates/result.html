@@ -64,6 +64,13 @@
                         padding: 10px;
                     }
 
+                    #loadingMessage {
+                        display: none; /* Initially hidden */
+                        margin-top: 20px;
+                        font-size: 1.2em;
+                        color: purple;
+                    }
+
                     .resume-analysis-text {
                         font-size: 14px; /* Adjust font size as needed */
                         color: #333; /* Neutral color for the text */
@@ -152,18 +159,25 @@
 
                 </style>
                 <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+                <script>
+                    function showLoading() {
+                        // Hide the submit button and show loading message
+                        document.getElementById('submitBtn').style.display = 'none';
+                        document.getElementById('loadingMessage').style.display = 'block';
+                    }
+                </script>
             </head>
             <body>
                 <div class="top-section">
                     <h1>AI Based Resume Modifier</h1>
-                    <form class="retry-form" method="POST">
+                    <form class="retry-form" method="POST" onsubmit="showLoading()">
                         <input type="hidden" name="resume_path" value="{{ resume_path }}">
                         <input type="hidden" name="job_desc_path" value="{{ job_desc_path }}">
                         <input type="hidden" name="retry" value="1">
-                        <input type="submit" value="Retry">
+                        <input type="submit" value="Retry" id="submitBtn">
                     </form>
                 </div>
-
+                <p id="loadingMessage">Loading, please wait...</p> <!-- Loading message -->
                 <div class="disclaimer">
                     <p>Disclaimer: Please review your processed resume as it has been modified by AI. Manual intervention may be needed to ensure accuracy and appropriateness.</p>
                 </div>

@@ -49,6 +49,13 @@
                 display: block;
                 margin: 10px auto;
             }
+            
+            #loadingMessage {
+                display: none; /* Initially hidden */
+                margin-top: 20px;
+                font-size: 1.2em;
+                color: purple;
+            }
     
             /* Mobile-specific styles */
             @media (max-width: 768px) {
@@ -72,13 +79,20 @@
                 }
             }
         </style>
+        <script>
+            function showLoading() {
+                // Hide the submit button and show loading message
+                document.getElementById('submitBtn').style.display = 'none';
+                document.getElementById('loadingMessage').style.display = 'block';
+            }
+        </script>
     </head>
     <body>
         <div class="top-section">
             <h1>AI Based Resume Modifier</h1>
         </div>
         <div class="content-box">
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
                 <div class="box">
                     <h2 style="margin-bottom: 5px;">Upload Original Resume</h2>
                     <p style="margin-top: 0;">format: pdf, docx, md, txt</p>
@@ -91,9 +105,10 @@
                 </div>
                 <div class="box">
                     <h2>Check AI response</h2>
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Submit" id="submitBtn">
                 </div>
-
+                <p id="loadingMessage">Loading, please wait...</p> <!-- Loading message -->
+    
                 <!-- Contact details section -->
                 <div style="margin-top: 20px; text-align: center;">
                     <p>If you have any questions or need help, feel free to reach out:</p>
